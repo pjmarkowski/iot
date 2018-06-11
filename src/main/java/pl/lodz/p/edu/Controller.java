@@ -4,30 +4,33 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class Controller {
 
-    @RequestMapping("/")
-    public String index() {
-        return "Greetings from Spring Boot!";
-    }
+
+
+
 
     @RequestMapping("/test")
     public String getData() throws IOException {
         String result;
         String result2;
+        String result3;
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT,true);
 
         RestTemplate restTemplate = new RestTemplate();
-//      result = restTemplate.getForObject("https://api.citybik.es/v2/networks/velov",String.class);
+     result = restTemplate.getForObject("https://api.citybik.es/v2/networks/lodzki-rower-publiczny-lodz",String.class);
+     result3 = restTemplate.getForObject("http://demo2317180.mockable.io/",String.class);
         result2 ="{\n" + "  \"network\": {\n" + "    \"company\": [\n" + "      \"JCDecaux\"\n" + "    ],\n" +
                 "    \"href\": \"\\/v2\\/networks\\/velov\",\n" + "    \"id\": \"velov\",\n" + "    \"license\": {\n" +
                 "      \"name\": \"Open Licence\",\n" +
@@ -62,11 +65,14 @@ public class Controller {
                 "        \"name\": \"1005 - MEISSONNIER\",\n" +
                 "        \"timestamp\": \"2018-01-19T18:56:56.752000Z\"\n" + "      }\n" + " ]\n" + "  }\n" + "}";
 
-        JsonNode arrNode = new ObjectMapper().readTree(result2).get("network");
+        JsonNode arrNode = new ObjectMapper().readTree(result).get("network");
         arrNode = arrNode.get("stations");
         String r = arrNode.toString();
 
         List<Station> stations =  objectMapper.readValue(r, new TypeReference<List<Station>>(){});
-        return stations.get(0).getLatitude() +" "+ stations.get(0).getLongitude();
+        for(int i=0;i<stations.size();i++){
+//            System.out.println(stations.get(i).getName());
+        }
+        return r;
     }
 }
