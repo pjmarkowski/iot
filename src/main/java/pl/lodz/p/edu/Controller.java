@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import pl.lodz.p.edu.entity.History;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,8 +16,24 @@ import java.util.Map;
 
 @RestController
 public class Controller {
+    @Autowired
+    private HistoryRepository historyRepository;
+
+    @GetMapping(path="/add")
+    public @ResponseBody String addNewRecord (@RequestParam String bikeNumber, @RequestParam String stationNumber, @RequestParam String date) {
+        History h = new History();
+        h.setBikeNumber(bikeNumber);
+        h.setStationNumber(stationNumber);
+        h.setDate(date);
+        historyRepository.save(h);
+        return "saved";
+    }
 
 
+    @GetMapping(path="/all")
+    public @ResponseBody Iterable<History> getAllHistory() {
+        return historyRepository.findAll();
+    }
 
 
 
