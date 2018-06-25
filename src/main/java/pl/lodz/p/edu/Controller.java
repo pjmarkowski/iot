@@ -35,6 +35,29 @@ public class Controller {
         return historyRepository.findAll();
     }
 
+    public void getAllStations() throws IOException {
+        String result;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT,true);
+        RestTemplate restTemplate = new RestTemplate();
+        result = restTemplate.getForObject("https://api.citybik.es/v2/networks/lodzki-rower-publiczny-lodz",String.class);
+        JsonNode arrNode = new ObjectMapper().readTree(result).get("network");
+        arrNode = arrNode.get("stations");
+        String r = arrNode.toString();
+        System.out.println(r);
+        List<Station> stations =  objectMapper.readValue(r, new TypeReference<List<Station>>(){});
+        for(int i=0;i<stations.size();i++){
+            if(!(stations.get(i).getExtra().getBikes()==null)) {
+                System.out.print("Size: "+stations.get(i).getExtra().getBikes().size());
+                for(int j=0;j<stations.get(i).getExtra().getBikes().size();j++){
+                    System.out.print("Bike: "+stations.get(i).getExtra().getBikes().get(j));
+                }
+            }
+            System.out.print("Station: "+stations.get(i).getExtra().getNumber());
+            System.out.println("Time: "+stations.get(i).getTimestamp());
+        }
+    }
+
 
 
     @RequestMapping("/test")
@@ -92,4 +115,6 @@ public class Controller {
         }
         return r;
     }
+
+
 }
