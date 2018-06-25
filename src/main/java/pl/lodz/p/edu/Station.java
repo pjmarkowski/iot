@@ -22,6 +22,7 @@ public class Station {
     @JsonProperty("extra")
     private Extra extra;
 
+
     public Station() {
     }
 
