@@ -48,13 +48,15 @@ public class Controller {
         List<Station> stations =  objectMapper.readValue(r, new TypeReference<List<Station>>(){});
         for(int i=0;i<stations.size();i++){
             if(!(stations.get(i).getExtra().getBikes()==null)) {
-                System.out.print("Size: "+stations.get(i).getExtra().getBikes().size());
+               // System.out.print("Size: "+stations.get(i).getExtra().getBikes().size());
                 for(int j=0;j<stations.get(i).getExtra().getBikes().size();j++){
                     System.out.print("Bike: "+stations.get(i).getExtra().getBikes().get(j));
+                    System.out.print(" Station: "+stations.get(i).getExtra().getNumber());
+                    System.out.println(" Time: "+stations.get(i).getTimestamp());
+
+                    addNewRecord(stations.get(i).getExtra().getBikes().get(j),stations.get(i).getExtra().getNumber(),stations.get(i).getTimestamp());
                 }
             }
-            System.out.print("Station: "+stations.get(i).getExtra().getNumber());
-            System.out.println("Time: "+stations.get(i).getTimestamp());
         }
     }
 
