@@ -17,4 +17,9 @@ public class EntryPointController {
         model.put("message", this.message);
         return "welcome";
     }
+    @RequestMapping("/statistics")
+    public String statistics(Map<String, Object> model) {
+        model.put("message", this.message);
+        return "statistics";
+    }
 }

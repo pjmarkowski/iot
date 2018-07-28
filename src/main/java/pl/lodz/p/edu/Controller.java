@@ -29,11 +29,18 @@ public class Controller {
         return "saved";
     }
 
+    @GetMapping(path="/getByBikeNumber")
+    public @ResponseBody Iterable<History> getHistoryByBikeNumber(String bikeNumber) {
+        Iterable<History> history = historyRepository.findByBikeNumber(bikeNumber);
+
+        return history;
+    }
 
     @GetMapping(path="/all")
     public @ResponseBody Iterable<History> getAllHistory() {
         return historyRepository.findAll();
     }
+
 
     public void getAllStations() throws IOException {
         String result;
@@ -72,7 +79,7 @@ public class Controller {
 
         RestTemplate restTemplate = new RestTemplate();
      result = restTemplate.getForObject("https://api.citybik.es/v2/networks/lodzki-rower-publiczny-lodz",String.class);
-     result3 = restTemplate.getForObject("http://demo2317180.mockable.io/",String.class);
+/*     result3 = restTemplate.getForObject("http://demo2317180.mockable.io/",String.class);
         result2 ="{\n" + "  \"network\": {\n" + "    \"company\": [\n" + "      \"JCDecaux\"\n" + "    ],\n" +
                 "    \"href\": \"\\/v2\\/networks\\/velov\",\n" + "    \"id\": \"velov\",\n" + "    \"license\": {\n" +
                 "      \"name\": \"Open Licence\",\n" +
@@ -106,7 +113,7 @@ public class Controller {
                 "        \"latitude\": 45.766073,\n" + "        \"longitude\": 4.832849,\n" +
                 "        \"name\": \"1005 - MEISSONNIER\",\n" +
                 "        \"timestamp\": \"2018-01-19T18:56:56.752000Z\"\n" + "      }\n" + " ]\n" + "  }\n" + "}";
-
+*/
         JsonNode arrNode = new ObjectMapper().readTree(result).get("network");
         arrNode = arrNode.get("stations");
         String r = arrNode.toString();

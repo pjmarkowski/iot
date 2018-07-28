@@ -28,7 +28,7 @@ public class Application {
     @PostConstruct
     public void init() throws IOException {
         System.out.println("%#@#^@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-       controller.getAllStations();
+      //controller.getAllStations();
     }
 
     @Bean
