@@ -13,7 +13,7 @@ function initialize() {
     var history;
     var linePlanCords = [];
 
-    $.getJSON('http://localhost:8080/test', function(data) {
+    $.getJSON('http://localhost:8080/allStations', function(data) {
 
        $.getJSON('http://localhost:8080/getByBikeNumber?bikeNumber=88594', function(jsonhistory) {
         console.log(jsonhistory.length);
@@ -21,29 +21,36 @@ function initialize() {
 
 
            var infoWindow = new google.maps.InfoWindow(), marker, i;
-           // console.log(JSON.stringify(jsonhistory[1]));
+           for(k=0;k<jsonhistory.length;k++){
+
+               console.log("history:" + JSON.stringify(jsonhistory[k]));
+       }
+
+           for(k=0;k<data.length;k++){
+
+               console.log("DATA:" + JSON.stringify(data[k]));
+           }
 
            for( i = 0; i < data.length; i++ ) {
                for(j = 0; j < jsonhistory.length; j++) {
-                   if(data[i].extra.number == jsonhistory[j].stationNumber) {
-                       console.log(JSON.stringify(jsonhistory[j]));
-                       var position = new google.maps.LatLng(data[i].latitude,data[i].longitude);
+                   if(data[i].stationNumber == jsonhistory[j].stationNumber) {
+                       console.log(JSON.stringify(data[i].latitude));
+                       var lat=data[i].latitude;
+                       var long= data[i].longtitude;
+                       var position = new google.maps.LatLng(lat, long);
                        bounds.extend(position);
                        linePlanCords.push(position);
                        marker = new google.maps.Marker({
                            position: position,
                            map: map,
-                           title: data[i].name +" "+jsonhistory[j].date
+                           title: data[i].stationName +" "+jsonhistory[j].date
                        });
 
                        google.maps.event.addListener(marker, 'click', (function(marker, i, j) {
                            return function() {
                                infoWindow.setContent('<div class="info_content">' +
-                                   '<h3>'+data[i].name+'</h3>' +
-                                   '<p>'+
-                                    'Free bikes: '+data[i].free_bikes+'</br>'+
-                                   'Bikes IDs: '+data[i].extra.bike_uids+'</br>'+
-                                   '</p>' +
+                                   '<h3>'+data[i].stationName+'</h3>' +
+
                                    '</div>');
                                infoWindow.open(map, marker);
                            }

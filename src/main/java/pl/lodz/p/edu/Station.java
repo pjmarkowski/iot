@@ -12,9 +12,9 @@ public class Station {
     @JsonProperty("id")
     private String id;
     @JsonProperty("latitude")
-    private String latitude;
+    private Float latitude;
     @JsonProperty("longitude")
-    private String longitude;
+    private Float longitude;
     @JsonProperty("name")
     private String name;
     @JsonProperty("timestamp")
@@ -58,19 +58,19 @@ public class Station {
         this.id = id;
     }
 
-    public String getLatitude() {
+    public Float getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(Float latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public Float getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(Float longitude) {
         this.longitude = longitude;
     }
 
