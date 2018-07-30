@@ -10,79 +10,116 @@ function initialize() {
     var mapOptions = {
         mapTypeId: 'roadmap'
     };
-    var history;
-    var linePlanCords = [];
+    var bikeList = [];
 
-    $.getJSON('http://localhost:8080/allStations', function(data) {
+    $.getJSON("http://localhost:8080/getAllBikes", function(json){
+        bikeList = json;
+        var str ="";
 
-       $.getJSON('http://localhost:8080/getByBikeNumber?bikeNumber=88594', function(jsonhistory) {
-        console.log(jsonhistory.length);
-            map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+        for(i=0;i<bikeList.length;i++){
+             var li=document.createElement('li')
+            li.className = "clickMe"
+            li.innerHTML='<a href="#">'+bikeList[i]+'</a>'
+            document.getElementById("bikes").appendChild(li)
 
-
-           var infoWindow = new google.maps.InfoWindow(), marker, i;
-           for(k=0;k<jsonhistory.length;k++){
-
-               console.log("history:" + JSON.stringify(jsonhistory[k]));
-       }
-
-           for(k=0;k<data.length;k++){
-
-               console.log("DATA:" + JSON.stringify(data[k]));
-           }
-
-           for( i = 0; i < data.length; i++ ) {
-               for(j = 0; j < jsonhistory.length; j++) {
-                   if(data[i].stationNumber == jsonhistory[j].stationNumber) {
-                       console.log(JSON.stringify(data[i].latitude));
-                       var lat=data[i].latitude;
-                       var long= data[i].longtitude;
-                       var position = new google.maps.LatLng(lat, long);
-                       bounds.extend(position);
-                       linePlanCords.push(position);
-                       marker = new google.maps.Marker({
-                           position: position,
-                           map: map,
-                           title: data[i].stationName +" "+jsonhistory[j].date
-                       });
-
-                       google.maps.event.addListener(marker, 'click', (function(marker, i, j) {
-                           return function() {
-                               infoWindow.setContent('<div class="info_content">' +
-                                   '<h3>'+data[i].stationName+'</h3>' +
-
-                                   '</div>');
-                               infoWindow.open(map, marker);
-                           }
-                       })(marker, i));
-                       map.fitBounds(bounds);
-                   };
-
-               }
-
-           }
-           var flightPath = new google.maps.Polyline({
-               path: linePlanCords,
-               geodesic: true,
-               strokeColor: '#FF0000',
-               strokeOpacity: 1.0,
-               strokeWeight: 2
-           });
+        }
 
 
-           flightPath.setMap(map);
-           var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-               this.setZoom(14);
-               google.maps.event.removeListener(boundsListener);
-           });
+        // console.log(str);
+        // var ul = document.createElement('ul');
+        // ul.className = "dropdown-menu";
+        // ul.innerHTML = str;
+        //
+        //
+        // document.getElementById("bikes").appendChild(ul)
+        // document.getElementById("bikes").innerHTML = str;
 
 
-           console.log(data.length);
 
 
-       });
+    $(function () {
+        $('.clickMe').click(function () {
+
+            var str = $(this).text();
+            console.log("History for:" + str);
+            console.log(bikeList);
+            var linePlanCords = [];
+            $.getJSON('http://localhost:8080/allStations', function(data) {
+
+                $.getJSON('http://localhost:8080/getByBikeNumber?bikeNumber='+str, function(jsonhistory) {
+                    console.log(jsonhistory.length);
+                    map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+
+
+                    var infoWindow = new google.maps.InfoWindow(), marker, i;
+                    for(k=0;k<jsonhistory.length;k++){
+
+                        console.log("history:" + JSON.stringify(jsonhistory[k]));
+                    }
+
+                    for(k=0;k<data.length;k++){
+
+                        console.log("DATA:" + JSON.stringify(data[k]));
+                    }
+
+                    for( i = 0; i < data.length; i++ ) {
+                        for(j = 0; j < jsonhistory.length; j++) {
+                            if(data[i].stationNumber == jsonhistory[j].stationNumber) {
+                                console.log(JSON.stringify(data[i].latitude));
+                                var lat=data[i].latitude;
+                                var long= data[i].longtitude;
+                                var position = new google.maps.LatLng(lat, long);
+                                bounds.extend(position);
+                                linePlanCords.push(position);
+                                marker = new google.maps.Marker({
+                                    position: position,
+                                    map: map,
+                                    title: data[i].stationName +" "+jsonhistory[j].date
+                                });
+
+                                google.maps.event.addListener(marker, 'click', (function(marker, i, j) {
+                                    return function() {
+                                        infoWindow.setContent('<div class="info_content">' +
+                                            '<h3>'+data[i].stationName+'</h3>' +
+
+                                            '</div>');
+                                        infoWindow.open(map, marker);
+                                    }
+                                })(marker, i));
+                                map.fitBounds(bounds);
+                            };
+
+                        }
+
+                    }
+                    var flightPath = new google.maps.Polyline({
+                        path: linePlanCords,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+
+
+                    flightPath.setMap(map);
+                    var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+                        this.setZoom(14);
+                        google.maps.event.removeListener(boundsListener);
+                    });
+
+                    console.log(data.length);
+
+                });
+            });
+
+
+        });
     });
+    });
+
 };
+
+
 
     document.getElementsByClassName("lodz").onclick = function clicklodz () {
         console.log("click")

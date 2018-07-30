@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.edu.entity.History;
@@ -48,6 +50,11 @@ public class Controller {
     public @ResponseBody Iterable<History> getHistoryByBikeNumber(String bikeNumber) {
         Iterable<History> history = historyRepository.findByBikeNumber(bikeNumber);
         return history;
+    }
+
+    @GetMapping(path="/getAllBikes")
+    public @ResponseBody List<String> getAllBikeNumber() {
+         return historyRepository.getAllBikeNumber();
     }
 
     @GetMapping(path="/getStationByNumber")
@@ -112,9 +119,6 @@ public class Controller {
 
         }
     }
-
-
-
 
     @RequestMapping("/test")
     public String getData() throws IOException {
